@@ -21,8 +21,8 @@ getUserMedia(streams, success, error);
 创建一个新的对象URL,该对象URL可以代表某一个指定的File对象或Blob对象.
 ```
 objectURL = window.URL.createObjectURL(blob);
-``
-`
+```
+
 ### Description
 ```
 cd example1
