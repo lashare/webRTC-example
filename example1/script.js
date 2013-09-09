@@ -1,51 +1,64 @@
-//多浏览器支持
-navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
-//returns a URL object that provides static methods used for creating and managing object URLs.
-window.URL = window.URL || window.webkitURL || window.mozURL || window.msURL;
+var webrtc = (function() {
 
-//检测浏览器是否支持getUserMedia
-if (navigator.getUserMedia) {
-  navigator.getUserMedia({
-    video: true,
-    audio: true
-  }, onSuccess, onError);
-} else {
-  alert('getUserMedia is not supported in this browser.');
-}
+  var getVideo = true,
+      getAudio = true,
 
-function onSuccess(stream) {
-  //------------------------video----------------------------------
-  //指定视频播放区域
-  var video = document.getElementById('webcam');
-  var videoSource;
+      video = document.getElementById('webcam');
+      //指定视频播放区域
 
-  if (window.URL) {
-    //创建一个新的对象URL,用来代表stream
-    videoSource = window.URL.createObjectURL(stream);
-  } else {
-    videoSource = stream;
-  }
-
-  //视频自动播放
-  video.autoplay = true;
-  //指定视频流,不同浏览器下viedo的使用不同，chrome中使用createObjectURL的方法
-  video.src = videoSource;
-
-  //------------------------audio----------------------------------
-  var audioContext, mediaStreamSource;
+  //多浏览器支持(getUserMedia和window.url在不同浏览器下都有所不同)
+  navigator.getUserMedia ||
+      (navigator.getUserMedia = navigator.mozGetUserMedia ||
+      navigator.webkitGetUserMedia || navigator.msGetUserMedia);
 
   window.audioContext ||
-    (window.audioContext = window.webkitAudioContext);
+      (window.audioContext = window.webkitAudioContext);
 
-  if (window.audioContext) {
-    //Creates an MediaStreamAudioSourceNode associated with a WebRTC MediaStream representing an audio stream, that may come from the local computer microphone or other sources.
-    audioContext = new window.audioContext();
-    mediaStreamSource = audioContext.createMediaStreamSource(stream);
+  function onSuccess(stream) {
+    var videoSource,
+        audioContext,
+        mediaStreamSource;
 
-    mediaStreamSource.connect(audioContext.destination);
+    //------------------------video----------------------------------
+    if (getVideo) {
+      if (window.webkitURL) {
+        //创建一个新的对象URL,用来代表stream
+        videoSource = window.webkitURL.createObjectURL(stream);
+      } else {
+        videoSource = stream;
+      }
+
+      //视频自动播放
+      video.autoplay = true;
+      //指定视频流,不同浏览器下viedo的使用不同，chrome中使用createObjectURL的方法
+      video.src = videoSource;
+    }
+
+    //------------------------audio----------------------------------
+    if (getAudio && window.audioContext) {
+      audioContext = new window.audioContext();
+      mediaStreamSource = audioContext.createMediaStreamSource(stream);
+      mediaStreamSource.connect(audioContext.destination);
+    }
   }
-}
 
-function onError() {
-  alert('There has been a problem retrieving the streams - did you allow access?');
-}
+  function onError() {
+    alert('There has been a problem retreiving the streams - are you running on file:/// or did you disallow access?');
+  }
+
+  function requestStreams() {
+    //检测浏览器是否支持getUserMedia
+    if (navigator.getUserMedia) {
+      navigator.getUserMedia({
+        video: getVideo,
+        audio: getAudio
+        }, onSuccess, onError);
+    } else {
+      alert('getUserMedia is not supported in this browser.');
+    }
+  }
+
+  (function init() {
+      requestStreams();
+  }());
+})();

@@ -23,6 +23,8 @@ getUserMedia(streams, success, error);
 objectURL = window.URL.createObjectURL(blob);
 ```
 
+### [audioContext](https://developer.mozilla.org/en-US/docs/Web/API/AudioContext)
+
 ### Description
 ```
 cd example1
