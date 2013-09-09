@@ -1,7 +1,9 @@
+// write a small JavaScript shim, so that we can reference each browser implementation using navigator.getUserMedia.
 navigator.getUserMedia ||
   (navigator.getUserMedia = navigator.mozGetUserMedia ||
   navigator.webkitGetUserMedia || navigator.msGetUserMedia);
 
+//检测浏览器是否支持getUserMedia
 if (navigator.getUserMedia) {
   navigator.getUserMedia({
     video: true,
