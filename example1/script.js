@@ -1,7 +1,7 @@
 //多浏览器支持
-navigator.getUserMedia= navigator.getUserMedia|| navigator.webkitGetUserMedia|| navigator.mozGetUserMedia|| navigator.msGetUserMedia;
+navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
 //returns a URL object that provides static methods used for creating and managing object URLs.
-window.URL= window.URL|| window.webkitURL|| window.mozURL|| window.msURL;
+window.URL = window.URL || window.webkitURL || window.mozURL || window.msURL;
 
 //检测浏览器是否支持getUserMedia
 if (navigator.getUserMedia) {
@@ -14,6 +14,7 @@ if (navigator.getUserMedia) {
 }
 
 function onSuccess(stream) {
+  //------------------------video----------------------------------
   //指定视频播放区域
   var video = document.getElementById('webcam');
   var videoSource;
@@ -29,6 +30,20 @@ function onSuccess(stream) {
   video.autoplay = true;
   //指定视频流,不同浏览器下viedo的使用不同，chrome中使用createObjectURL的方法
   video.src = videoSource;
+
+  //------------------------audio----------------------------------
+  var audioContext, mediaStreamSource;
+
+  window.audioContext ||
+    (window.audioContext = window.webkitAudioContext);
+
+  if (window.audioContext) {
+    //Creates an MediaStreamAudioSourceNode associated with a WebRTC MediaStream representing an audio stream, that may come from the local computer microphone or other sources.
+    audioContext = new window.audioContext();
+    mediaStreamSource = audioContext.createMediaStreamSource(stream);
+
+    mediaStreamSource.connect(audioContext.destination);
+  }
 }
 
 function onError() {
