@@ -20,6 +20,11 @@ getUserMedia(streams, success, error);
 * success is the function to call if we can get these streams(成功的回调函数)
 * error is the function to call if we are unable to get these streams(失败的回调函数)
 
+### Video Stream
+* Get our video element from the DOM.
+* Set video to autoplay.
+* Set the video source to our stream.
+
 ### [window](http://www.w3school.com.cn/htmldom/dom_obj_window.asp)
 Window 对象表示浏览器中打开的窗口。
 
@@ -30,6 +35,11 @@ createObjectURL创建一个新的对象URL,该对象URL可以代表某一个指�
 ```
 objectURL = window.URL.createObjectURL(blob);
 ```
+
+### Audio Stream
+* Create an Audio Context.
+* Create our Media Stream Source.
+* Connect our Media Stream Source to our Audio Context.
 
 ### [audioContext](https://developer.mozilla.org/en-US/docs/Web/API/AudioContext)
 The AudioContext interface represents an audio-processing graph built from audio modules linked together, each represented by an AudioNode.

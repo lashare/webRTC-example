@@ -46,6 +46,19 @@ var webrtc = (function() {
     alert('There has been a problem retreiving the streams - are you running on file:/// or did you disallow access?');
   }
 
+  function takePhoto() {
+    //photo指定截屏后展示图片的地方,context是类似笔或颜料刷之类的工具集
+    var photo = document.getElementById('photo'),
+        context = photo.getContext('2d');
+
+    // draw our video image
+    photo.width = video.clientWidth;
+    photo.height = video.clientHeight;
+
+    // http://www.w3school.com.cn/html5/canvas_drawimage.asp
+    context.drawImage(video, 0, 0, photo.width, photo.height);
+  }
+
   function requestStreams() {
     //检测浏览器是否支持getUserMedia
     if (navigator.getUserMedia) {
@@ -58,7 +71,13 @@ var webrtc = (function() {
     }
   }
 
+  function initEvents() {
+    var photoButton = document.getElementById('takePhoto');
+    photoButton.addEventListener('click', takePhoto, false);
+  }
+
   (function init() {
       requestStreams();
+      initEvents();
   }());
 })();
