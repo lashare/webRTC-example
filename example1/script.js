@@ -4,9 +4,7 @@ var webrtc = (function() {
       getAudio = true,
       //指定视频播放区域
       video = document.getElementById('webcam'),
-      //
-      feed = document.getElementById('feed'),
-      feedContext = feed.getContext('2d'),
+      //Canvas stream
       display = document.getElementById('display'),
       displayContext = display.getContext('2d');
 
@@ -38,8 +36,8 @@ var webrtc = (function() {
       video.src = videoSource;
 
       //Canvas stream
-      display.width = feed.width = 320;
-      display.height = feed.height = 240;
+      display.width =  320;
+      display.height = 240;
 
       streamFeed();
     }
