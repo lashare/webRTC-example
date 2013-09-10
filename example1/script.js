@@ -2,9 +2,13 @@ var webrtc = (function() {
 
   var getVideo = true,
       getAudio = true,
-
-      video = document.getElementById('webcam');
       //指定视频播放区域
+      video = document.getElementById('webcam'),
+      //
+      feed = document.getElementById('feed'),
+      feedContext = feed.getContext('2d'),
+      display = document.getElementById('display'),
+      displayContext = display.getContext('2d');
 
   //多浏览器支持(getUserMedia、window.url和window.audioContext在不同浏览器下都有所不同)
   navigator.getUserMedia ||
@@ -32,6 +36,12 @@ var webrtc = (function() {
       video.autoplay = true;
       //指定视频流,不同浏览器下viedo的使用不同，chrome中使用createObjectURL的方法
       video.src = videoSource;
+
+      //Canvas stream
+      display.width = feed.width = 320;
+      display.height = feed.height = 240;
+
+      streamFeed();
     }
 
     //------------------------audio----------------------------------
@@ -59,6 +69,11 @@ var webrtc = (function() {
     context.drawImage(video, 0, 0, photo.width, photo.height);
   }
 
+  function streamFeed() {
+    requestAnimationFrame(streamFeed);
+    displayContext.drawImage(video, 0, 0, display.width, display.height);
+  }
+
   function requestStreams() {
     //检测浏览器是否支持getUserMedia
     if (navigator.getUserMedia) {
@@ -72,6 +87,7 @@ var webrtc = (function() {
   }
 
   function initEvents() {
+    //拍照的事件监听
     var photoButton = document.getElementById('takePhoto');
     photoButton.addEventListener('click', takePhoto, false);
   }

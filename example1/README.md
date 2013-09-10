@@ -51,6 +51,18 @@ Creates an MediaStreamAudioSourceNode associated with a WebRTC MediaStream repre
 **AudioContext.destination**
 Returns an AudioDestinationNode representing the final destination of all audio in the context. It often represents an actual audio-rendering device.
 
+### Capturing images(截屏)
+* Retrieve our canvas element from the DOM.
+* Get the canvas drawing context.
+* Make our canvas the same width and height as the video feed.
+* Draw the current video image to our canvas.
+
+### Canvas stream
+* Convert our video stream to a canvas feed.
+* Grab the imageData from our canvas.
+* Loop through our imageData array and manipulate pixels.
+* Output to a display canvas.
+
 ### Description
 ```
 cd example1
