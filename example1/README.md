@@ -24,7 +24,9 @@ getUserMedia(streams, success, error);
 Window 对象表示浏览器中打开的窗口。
 
 ### [window.URL.createObjectURL](https://developer.mozilla.org/zh-CN/docs/DOM/window.URL.createObjectURL)
-创建一个新的对象URL,该对象URL可以代表某一个指定的File对象或Blob对象.
+[window.URL](https://developer.mozilla.org/en-US/docs/Web/API/Window.URL)属性返回一个URL对象，该对象用来提供一组用于创建和管理URLs的静态方法。
+
+createObjectURL创建一个新的对象URL,该对象URL可以代表某一个指定的File对象或Blob对象(二进制大对象).
 ```
 objectURL = window.URL.createObjectURL(blob);
 ```
