@@ -6,7 +6,7 @@ var webrtc = (function() {
       video = document.getElementById('webcam');
       //指定视频播放区域
 
-  //多浏览器支持(getUserMedia和window.url在不同浏览器下都有所不同)
+  //多浏览器支持(getUserMedia、window.url和window.audioContext在不同浏览器下都有所不同)
   navigator.getUserMedia ||
       (navigator.getUserMedia = navigator.mozGetUserMedia ||
       navigator.webkitGetUserMedia || navigator.msGetUserMedia);
