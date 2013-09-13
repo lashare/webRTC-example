@@ -6,6 +6,8 @@
 * https://github.com/webRTC
 * https://bitbucket.org/webrtc/codelab
 * https://developer.mozilla.org/en-US/docs/Web/API
+* http://simplewebrtc.com/
+* https://github.com/muaz-khan/WebRTC-Experiment/
 
 ### API
 * http://docs.webplatform.org/wiki/apis/webrtc

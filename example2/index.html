@@ -84,12 +84,10 @@
         trace("Created local peer connection object localPeerConnection");
         //onicecandidate returns locally generated ICE candidates so you can pass them over other peer(s) via XHR or Socket.
         localPeerConnection.onicecandidate = gotLocalIceCandidate;
-        console.log(localPeerConnection);
       
         remotePeerConnection = new webkitRTCPeerConnection(servers);
         trace("Created remote peer connection object remotePeerConnection");
         remotePeerConnection.onicecandidate = gotRemoteIceCandidate;
-        //console.log(gotRemoteIceCandidate);
         //onaddstream returns remote stream (microphone and camera of your friend!).
         remotePeerConnection.onaddstream = gotRemoteStream;
         //console.log(gotRemoteStream);
@@ -127,6 +125,11 @@
         }
       }
       
+      function gotRemoteStream(event){
+        remoteVideo.src = URL.createObjectURL(event.stream);
+        trace("Received remote stream");
+      }
+      
       function hangup() {
         trace("Ending call");
         localPeerConnection.close();
@@ -135,11 +138,6 @@
         remotePeerConnection = null;
         hangupButton.disabled = true;
         callButton.disabled = false;
-      }
-      
-      function gotRemoteStream(event){
-        remoteVideo.src = URL.createObjectURL(event.stream);
-        trace("Received remote stream");
       }
     </script>
 
