@@ -36,6 +36,12 @@
         <table style="width: 100%;" id="rooms-list"></table>
         <!-- local/remote videos container -->
         <div id="videos-container"></div>
+        <hr />
+        <h2>Local video container</h2>
+        <div id="local-videos-container"></div>
+        <hr />
+        <h2>Remote video container</h2>
+        <div id="remote-videos-container"></div>
       </section>
 
       <script>
@@ -76,8 +82,24 @@
           socket.on('message', config.onmessage);
         };
 
-        connection.onstream = function(e) {
-          videosContainer.insertBefore(e.mediaElement, videosContainer.firstChild);
+        connection.onstream = function(stream) {
+          //videosContainer.insertBefore(e.mediaElement, videosContainer.firstChild);
+
+          if (stream.type === 'local') {
+            var video = getVideo(stream, {
+              username: window.username
+            });
+
+            var localVideosContainer = document.getElementById('local-videos-container');
+            localVideosContainer.appendChild(video);
+          }
+
+          if (stream.type === 'remote') {
+            var video = getVideo(stream, stream.extra);
+
+            var remoteVideosContainer = document.getElementById('remote-videos-container');
+            remoteVideosContainer.appendChild(video, remoteVideosContainer.firstChild);
+          }
 
           // rotate 360deg
           //e.mediaElement.style[navigator.mozGetUserMedia ? 'transform' : '-webkit-transform'] = 'rotate(0deg)';
@@ -89,6 +111,37 @@
         connection.onstreamended = function(e) {
           if(e.mediaElement.parentNode) e.mediaElement.parentNode.removeChild(e.mediaElement);
         };
+
+    function getVideo(stream, extra) {
+        var div = document.createElement('div');
+        div.className = 'video-container';
+        div.id = stream.userid || 'self';
+
+        //if (stream.type === 'remote') {
+        //    if (window.isRoomInitiator) {
+        //        var eject = document.createElement('button');
+        //        eject.className = 'eject';
+        //        eject.title = 'Eject this User';
+
+        //        eject.onclick = function () {
+        //            // eject a specific user
+        //            connection.eject(this.parentNode.id);
+        //            this.parentNode.style.display = 'none';
+        //        };
+        //        div.appendChild(eject);
+        //    }
+        //}
+        div.appendChild(stream.mediaElement);
+
+        if (extra) {
+            var h2 = document.createElement('h2');
+            h2.innerHTML = extra.username;
+            div.appendChild(h2);
+        }
+        return div
+    };
+
+
 
         var sessions = { };
         connection.onNewSession = function(session) {
@@ -105,6 +158,8 @@
           var joinRoomButton = tr.querySelector('.join');
           joinRoomButton.setAttribute('data-sessionid', session.sessionid);
           joinRoomButton.onclick = function() {
+            if (!window.username) window.username = prompt('Please enter your username') || 'Anonymous';
+            //session.extra = {username: window.username};
             this.disabled = true;
 
             var sessionid = this.getAttribute('data-sessionid');
@@ -114,7 +169,9 @@
             console.log("-------------------session after join-------------------");
             console.log(session);
 
-            connection.join(session);
+            connection.join(session, {
+                            username: window.username
+                                      });
           };
         };
 
@@ -122,9 +179,11 @@
         var roomsList = document.getElementById('rooms-list');
 
         document.getElementById('setup-new-broadcast').onclick = function() {
+          if (!window.username) window.username = prompt('Please enter your username') || 'Anonymous';
           this.disabled = true;
           connection.extra = {
-            'session-name': document.getElementById('broadcast-name').value || 'Anonymous'
+            'session-name': document.getElementById('broadcast-name').value || 'Anonymous',
+            username: window.username
           };
           connection.open();
         };
