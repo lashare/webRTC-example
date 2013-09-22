@@ -42,8 +42,7 @@
         var connection = new RTCMultiConnection();
         connection.session = {
           audio: true,
-          video: true,
-          oneway: true
+          video: true
         };
         //connection.direction = 'one-to-many';
         connection.direction = 'many-to-many';
@@ -85,6 +84,10 @@
           //setTimeout(function() {
           //    e.mediaElement.style[navigator.mozGetUserMedia ? 'transform' : '-webkit-transform'] = 'rotate(360deg)';
           //}, 1000);
+        };
+
+        connection.onstreamended = function(e) {
+          if(e.mediaElement.parentNode) e.mediaElement.parentNode.removeChild(e.mediaElement);
         };
 
         var sessions = { };
