@@ -1,14 +1,10 @@
-// 2013, Muaz Khan - https://github.com/muaz-khan
-// MIT License     - https://www.webrtc-experiment.com/licence/
-// Documentation   - https://github.com/muaz-khan/WebRTC-Experiment/blob/master/socketio-over-nodejs
-
 var app = require('express')(),
     server = require('http').createServer(app),
     io = require('socket.io').listen(server);
 
 server.listen(8888);
 
-// ----------------------------------socket.io
+// ----------------------------------socket.io---------------------------------------
 
 var channels = {};
 
@@ -49,3 +45,23 @@ function onNewNamespace(channel, sender) {
     });
 }
 
+
+// ----------------------------------extras-------------------------------------------
+app.get('/', function (req, res) {
+    res.sendfile(__dirname + '/static/index.html');
+});
+
+app.get('/javascripts/socket.io.js', function (req, res) {
+    res.setHeader('Content-Type', 'application/javascript');
+    res.sendfile(__dirname + '/static/javascripts/socket.io.js');
+});
+
+app.get('/javascripts/RTCMultiConnection-v1.4.js', function (req, res) {
+    res.setHeader('Content-Type', 'application/javascript');
+    res.sendfile(__dirname + '/static/javascripts/RTCMultiConnection-v1.4.js');
+});
+
+app.get('/styles.css', function (req, res) {
+    res.setHeader('Content-Type', 'text/css');
+    res.sendfile(__dirname + '/static/styles.css');
+});
