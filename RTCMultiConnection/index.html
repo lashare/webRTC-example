@@ -58,8 +58,6 @@
           var SIGNALING_SERVER = 'https://www.webrtc-experiment.com:2015/';
           var channel = config.channel || this.channel || location.hash.substr(1);
           var sender = Math.round(Math.random() * 999999999) + 999999999;
-          console.log(channel);
-          console.log(sender);
 
           io.connect(SIGNALING_SERVER).emit('new-channel', {
             channel: channel,
@@ -112,34 +110,20 @@
           if(e.mediaElement.parentNode) e.mediaElement.parentNode.removeChild(e.mediaElement);
         };
 
-    function getVideo(stream, extra) {
-        var div = document.createElement('div');
-        div.className = 'video-container';
-        div.id = stream.userid || 'self';
+        //显示视频房主名称
+        function getVideo(stream, extra) {
+          var div = document.createElement('div');
+          div.className = 'video-container';
+          div.id = stream.userid || 'self';
+          div.appendChild(stream.mediaElement);
 
-        //if (stream.type === 'remote') {
-        //    if (window.isRoomInitiator) {
-        //        var eject = document.createElement('button');
-        //        eject.className = 'eject';
-        //        eject.title = 'Eject this User';
-
-        //        eject.onclick = function () {
-        //            // eject a specific user
-        //            connection.eject(this.parentNode.id);
-        //            this.parentNode.style.display = 'none';
-        //        };
-        //        div.appendChild(eject);
-        //    }
-        //}
-        div.appendChild(stream.mediaElement);
-
-        if (extra) {
+          if (extra) {
             var h2 = document.createElement('h2');
             h2.innerHTML = extra.username;
             div.appendChild(h2);
-        }
-        return div
-    };
+          }
+          return div
+        };
 
 
 
@@ -147,8 +131,6 @@
         connection.onNewSession = function(session) {
           if (sessions[session.sessionid]) return;
           sessions[session.sessionid] = session;
-          console.log("-------------------session before join-------------------");
-          console.log(session);
 
           var tr = document.createElement('tr');
           tr.innerHTML = '<td><strong>' + session.extra['session-name'] + '</strong> is broadcasting his media!</td>' +
@@ -159,19 +141,14 @@
           joinRoomButton.setAttribute('data-sessionid', session.sessionid);
           joinRoomButton.onclick = function() {
             if (!window.username) window.username = prompt('Please enter your username') || 'Anonymous';
-            //session.extra = {username: window.username};
             this.disabled = true;
 
             var sessionid = this.getAttribute('data-sessionid');
             session = sessions[sessionid];
 
             if (!session) throw 'No such session exists.';
-            console.log("-------------------session after join-------------------");
-            console.log(session);
 
-            connection.join(session, {
-                            username: window.username
-                                      });
+            connection.join(session, {username: window.username});
           };
         };
 
