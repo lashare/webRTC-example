@@ -1,0 +1,10 @@
+{
+  "name": "webrtc-signaling",
+  "version": "0.0.1",
+  "description": "signaling server for webrtc",
+  "dependencies": {
+    "express": "",
+    "socket.io": ""
+  },
+  "main": "signaler.js"
+}
