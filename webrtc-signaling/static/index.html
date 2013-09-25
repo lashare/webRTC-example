@@ -75,6 +75,11 @@
           });
 
           socket.send = function(message) {
+            console.log("-------------socket.send---------------------");
+            console.log("sender: ");
+            console.log(sender);
+            console.log("message: ");
+            console.log(message);
             socket.emit('message', {
               sender: sender,
               data: message
@@ -133,6 +138,8 @@
 
         var sessions = { };
         connection.onNewSession = function(session) {
+          console.log("------------------------sessions-------------------------------");
+          console.log(sessions);
           if (sessions[session.sessionid]) return;
           sessions[session.sessionid] = session;
 
