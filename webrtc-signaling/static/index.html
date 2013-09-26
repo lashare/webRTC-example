@@ -119,16 +119,41 @@
           if(e.mediaElement.parentNode) e.mediaElement.parentNode.removeChild(e.mediaElement);
         };
 
-        //显示视频房主名称
+        //显示视频房主名称, mute
         function getVideo(stream, extra) {
+          console.log("--------------------getVideo-----------------------");
+          console.log(stream);
           var div = document.createElement('div');
           div.className = 'video-container';
           div.id = stream.userid || 'self';
           div.appendChild(stream.mediaElement);
 
+          var button = document.createElement('button');
+          button.innerHTML = 'Mute';
+          button.id = stream.streamid;
+          button.onclick = function() {
+              button = this;
+              button.disabled = true;
+              var streamid = button.id;
+
+              if (button.innerHTML == 'Mute') {
+                  connection.streams[streamid].mute();
+                  button.innerHTML = 'UnMute';
+              } else {
+                  connection.streams[streamid].unmute();
+                  button.innerHTML = 'Mute';
+              }
+
+              setTimeout(function() {
+                  button.disabled = false;
+              }, 200);
+          };
+          div.appendChild(button);
+
           if (extra) {
             var h2 = document.createElement('h2');
-            h2.innerHTML = extra.username;
+            //h2.innerHTML = extra.username;
+            h2.innerHTML = stream.userid;
             div.appendChild(h2);
           }
           return div
