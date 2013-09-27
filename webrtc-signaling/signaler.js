@@ -42,8 +42,10 @@ function onNewNamespace(channel, sender) {
           console.log("--------------------broadcast message-----------------------------");
           console.log(data.data);
           console.log("-------------------------------------------------------------------");
-            if (data.sender == sender)
+            if (data.sender == sender) {
+              console.log("------------------------------send message----------------------------");
                 socket.broadcast.emit('message', data.data);
+            }
         });
     });
 }
