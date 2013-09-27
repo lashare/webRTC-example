@@ -130,14 +130,17 @@
 
           var button = document.createElement('button');
           button.innerHTML = 'Mute';
-          button.id = stream.streamid;
           button.onclick = function() {
               button = this;
               button.disabled = true;
-              var streamid = button.id;
+              var streamid = stream.streamid;
 
               if (button.innerHTML == 'Mute') {
-                  connection.streams[streamid].mute();
+                  //connection.streams[streamid].mute();
+                  connection.streams.mute({
+                      audio: true,
+                      video: true,
+                  });
                   button.innerHTML = 'UnMute';
               } else {
                   connection.streams[streamid].unmute();
@@ -176,7 +179,7 @@
           var joinRoomButton = tr.querySelector('.join');
           joinRoomButton.setAttribute('data-sessionid', session.sessionid);
           joinRoomButton.onclick = function() {
-            if (!window.username) window.username = prompt('Please enter your username') || 'Anonymous';
+            //if (!window.username) window.username = prompt('Please enter your username') || 'Anonymous';
             this.disabled = true;
 
             var sessionid = this.getAttribute('data-sessionid');
@@ -184,7 +187,11 @@
 
             if (!session) throw 'No such session exists.';
 
-            connection.join(session, {username: window.username});
+            connection.join(session);
+            //connection.addStream({
+            //  audio: true,
+            //  video: true
+            //});
           };
         };
 
