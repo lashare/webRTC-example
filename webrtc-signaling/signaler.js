@@ -56,6 +56,10 @@ app.get('/', function (req, res) {
     res.sendfile(__dirname + '/static/index.html');
 });
 
+app.get('/camera', function (req, res) {
+    res.sendfile(__dirname + '/static/without-camera.html');
+});
+
 app.get('/javascripts/socket.io.js', function (req, res) {
     res.setHeader('Content-Type', 'application/javascript');
     res.sendfile(__dirname + '/static/javascripts/socket.io.js');

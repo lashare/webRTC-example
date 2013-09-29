@@ -180,10 +180,14 @@
             //广播，只能看到房间主人的视频
             //connection.dontAttachStream = true;
             //connection.join(session);
-            connection.addStream({
-              audio: true,
-              video: true,
-            });
+            connection.onopen = function(e) {
+              connection.addStream({
+                audio: false,
+                video: false,
+              });
+            };
+            connection.connect(session.sessionid);
+            connection.open(session.sessionid);
           };
         };
 
