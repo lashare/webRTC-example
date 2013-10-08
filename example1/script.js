@@ -30,6 +30,7 @@ var webrtc = (function() {
         videoSource = stream;
       }
 
+      console.log(videoSource);
       //视频自动播放
       video.autoplay = true;
       //指定视频流,不同浏览器下viedo的使用不同，chrome中使用createObjectURL的方法
@@ -39,7 +40,7 @@ var webrtc = (function() {
       display.width =  320;
       display.height = 240;
 
-      streamFeed();
+      //streamFeed();
     }
 
     //------------------------audio----------------------------------
