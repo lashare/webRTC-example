@@ -97,9 +97,11 @@ var localVideo = document.querySelector('#localVideo');
 var remoteVideo = document.querySelector('#remoteVideo');
 
 function handleUserMedia(stream) {
-  console.log('Adding local stream.');
+  console.log('Adding local stream.---------------------');
   localVideo.src = window.URL.createObjectURL(stream);
+  console.log(window.URL.createObjectURL(stream));
   localStream = stream;
+  console.log(stream);
   sendMessage('got user media');
   if (isInitiator) {
     maybeStart();
@@ -116,9 +118,9 @@ navigator.getUserMedia(constraints, handleUserMedia, handleUserMediaError);
 
 console.log('Getting user media with constraints', constraints);
 
-if (location.hostname != "localhost") {
-  requestTurn('https://computeengineondemand.appspot.com/turn?username=41784574&key=4080218913');
-}
+//if (location.hostname != "localhost") {
+//  requestTurn('https://computeengineondemand.appspot.com/turn?username=41784574&key=4080218913');
+//}
 
 function maybeStart() {
   if (!isStarted && typeof localStream != 'undefined' && isChannelReady) {
@@ -163,12 +165,6 @@ function handleIceCandidate(event) {
   } else {
     console.log('End of candidates.');
   }
-}
-
-function handleRemoteStreamAdded(event) {
-  console.log('Remote stream added.');
-  remoteVideo.src = window.URL.createObjectURL(event.stream);
-  remoteStream = event.stream;
 }
 
 function handleCreateOfferError(event){
@@ -223,9 +219,12 @@ function requestTurn(turn_url) {
 }
 
 function handleRemoteStreamAdded(event) {
-  console.log('Remote stream added.');
+  console.log('Remote stream added.------------------------');
   remoteVideo.src = window.URL.createObjectURL(event.stream);
-  remoteStream = event.stream;
+  console.log(window.URL.createObjectURL(event.stream));
+  //不是必须的
+  //remoteStream = event.stream;
+  console.log(event.stream);
 }
 
 function handleRemoteStreamRemoved(event) {
