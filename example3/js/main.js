@@ -27,7 +27,7 @@ if (room === '') {
   //
 }
 
-var socket = io.connect();
+var socket = io.connect('http://192.168.0.102:2013');
 
 if (room !== '') {
   console.log('Create or join room', room);
@@ -112,6 +112,7 @@ function handleUserMediaError(error){
   console.log('navigator.getUserMedia error: ', error);
 }
 
+//--------------------------start--------------------------------------
 var constraints = {video: true};
 navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 navigator.getUserMedia(constraints, handleUserMedia, handleUserMediaError);
@@ -134,6 +135,7 @@ function maybeStart() {
   }
 }
 
+//关闭页面时
 window.onbeforeunload = function(e){
 	sendMessage('bye');
 }
@@ -146,7 +148,8 @@ function createPeerConnection() {
     pc.onicecandidate = handleIceCandidate;
     pc.onaddstream = handleRemoteStreamAdded;
     pc.onremovestream = handleRemoteStreamRemoved;
-    console.log('Created RTCPeerConnnection');
+    console.log('Created RTCPeerConnnection------------------------');
+    console.log(pc);
   } catch (e) {
     console.log('Failed to create PeerConnection, exception: ' + e.message);
     alert('Cannot create RTCPeerConnection object.');
@@ -189,35 +192,6 @@ function setLocalAndSendMessage(sessionDescription) {
   sendMessage(sessionDescription);
 }
 
-function requestTurn(turn_url) {
-  var turnExists = false;
-  for (var i in pc_config.iceServers) {
-    if (pc_config.iceServers[i].url.substr(0, 5) === 'turn:') {
-      turnExists = true;
-      turnReady = true;
-      break;
-    }
-  }
-  if (!turnExists) {
-    console.log('Getting TURN server from ', turn_url);
-    // No TURN server. Get one from computeengineondemand.appspot.com:
-    var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function(){
-      if (xhr.readyState === 4 && xhr.status === 200) {
-        var turnServer = JSON.parse(xhr.responseText);
-      	console.log('Got TURN server: ', turnServer);
-        pc_config.iceServers.push({
-          'url': 'turn:' + turnServer.username + '@' + turnServer.turn,
-          'credential': turnServer.password
-        });
-        turnReady = true;
-      }
-    };
-    xhr.open('GET', turn_url, true);
-    xhr.send();
-  }
-}
-
 function handleRemoteStreamAdded(event) {
   console.log('Remote stream added.------------------------');
   remoteVideo.src = window.URL.createObjectURL(event.stream);
@@ -231,11 +205,12 @@ function handleRemoteStreamRemoved(event) {
   console.log('Remote stream removed. Event: ', event);
 }
 
-function hangup() {
-  console.log('Hanging up.');
-  stop();
-  sendMessage('bye');
-}
+//挂断
+//function hangup() {
+//  console.log('Hanging up.');
+//  stop();
+//  sendMessage('bye');
+//}
 
 function handleRemoteHangup() {
 //  console.log('Session terminated.');
@@ -243,15 +218,44 @@ function handleRemoteHangup() {
   // isInitiator = false;
 }
 
-function stop() {
-  isStarted = false;
-  // isAudioMuted = false;
-  // isVideoMuted = false;
-  pc.close();
-  pc = null;
-}
+//function stop() {
+//  isStarted = false;
+//  // isAudioMuted = false;
+//  // isVideoMuted = false;
+//  pc.close();
+//  pc = null;
+//}
 
-///////////////////////////////////////////
+//function requestTurn(turn_url) {
+//  var turnExists = false;
+//  for (var i in pc_config.iceServers) {
+//    if (pc_config.iceServers[i].url.substr(0, 5) === 'turn:') {
+//      turnExists = true;
+//      turnReady = true;
+//      break;
+//    }
+//  }
+//  if (!turnExists) {
+//    console.log('Getting TURN server from ', turn_url);
+//    // No TURN server. Get one from computeengineondemand.appspot.com:
+//    var xhr = new XMLHttpRequest();
+//    xhr.onreadystatechange = function(){
+//      if (xhr.readyState === 4 && xhr.status === 200) {
+//        var turnServer = JSON.parse(xhr.responseText);
+//      	console.log('Got TURN server: ', turnServer);
+//        pc_config.iceServers.push({
+//          'url': 'turn:' + turnServer.username + '@' + turnServer.turn,
+//          'credential': turnServer.password
+//        });
+//        turnReady = true;
+//      }
+//    };
+//    xhr.open('GET', turn_url, true);
+//    xhr.send();
+//  }
+//}
+
+////////////////////////////////other, not necessary/////////////////////////////////
 
 // Set Opus as the default audio codec if it's present.
 function preferOpus(sdp) {
