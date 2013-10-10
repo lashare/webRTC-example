@@ -70,8 +70,9 @@ function sendMessage(message){
 
 socket.on('message', function (message){
   console.log('Client received message:', message);
+  console.log('----------Message type: ', message.type);
   if (message === 'got user media') {
-  	maybeStart();
+    maybeStart();
   } else if (message.type === 'offer') {
     if (!isInitiator && !isStarted) {
       maybeStart();
@@ -125,6 +126,7 @@ console.log('Getting user media with constraints', constraints);
 
 function maybeStart() {
   if (!isStarted && typeof localStream != 'undefined' && isChannelReady) {
+    console.log("-------------------maybeStart------------------------");
     createPeerConnection();
     pc.addStream(localStream);
     isStarted = true;
