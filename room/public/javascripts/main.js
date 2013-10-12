@@ -8,11 +8,6 @@ var pc;
 var remoteStream;
 var turnReady;
 
-//var pc_config = {'iceServers': [{'url': 'stun:stun.l.google.com:19302'}]};
-
-//var pc_constraints = {'optional': [{'DtlsSrtpKeyAgreement': true}]};
-
-// Set up audio and video regardless of what devices are present.
 var sdpConstraints = {'mandatory': {
   'OfferToReceiveAudio':true,
   'OfferToReceiveVideo':true }};
@@ -61,7 +56,7 @@ socket.on('log', function (array){
 ////////////////////////////////////////////////
 
 function sendMessage(message){
-	console.log('Client sending message: ', message);
+  console.log('Client sending message: ', message);
   // if (typeof message === 'object') {
   //   message = JSON.stringify(message);
   // }
@@ -119,10 +114,6 @@ navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia 
 navigator.getUserMedia(constraints, handleUserMedia, handleUserMediaError);
 
 console.log('Getting user media with constraints', constraints);
-
-//if (location.hostname != "localhost") {
-//  requestTurn('https://computeengineondemand.appspot.com/turn?username=41784574&key=4080218913');
-//}
 
 function maybeStart() {
   if (!isStarted && typeof localStream != 'undefined' && isChannelReady) {
@@ -198,8 +189,6 @@ function handleRemoteStreamAdded(event) {
   console.log('Remote stream added.------------------------');
   remoteVideo.src = window.URL.createObjectURL(event.stream);
   console.log(window.URL.createObjectURL(event.stream));
-  //不是必须的
-  //remoteStream = event.stream;
   console.log(event.stream);
 }
 
@@ -226,35 +215,6 @@ function handleRemoteHangup() {
 //  // isVideoMuted = false;
 //  pc.close();
 //  pc = null;
-//}
-
-//function requestTurn(turn_url) {
-//  var turnExists = false;
-//  for (var i in pc_config.iceServers) {
-//    if (pc_config.iceServers[i].url.substr(0, 5) === 'turn:') {
-//      turnExists = true;
-//      turnReady = true;
-//      break;
-//    }
-//  }
-//  if (!turnExists) {
-//    console.log('Getting TURN server from ', turn_url);
-//    // No TURN server. Get one from computeengineondemand.appspot.com:
-//    var xhr = new XMLHttpRequest();
-//    xhr.onreadystatechange = function(){
-//      if (xhr.readyState === 4 && xhr.status === 200) {
-//        var turnServer = JSON.parse(xhr.responseText);
-//      	console.log('Got TURN server: ', turnServer);
-//        pc_config.iceServers.push({
-//          'url': 'turn:' + turnServer.username + '@' + turnServer.turn,
-//          'credential': turnServer.password
-//        });
-//        turnReady = true;
-//      }
-//    };
-//    xhr.open('GET', turn_url, true);
-//    xhr.send();
-//  }
 //}
 
 ////////////////////////////////other, not necessary/////////////////////////////////
