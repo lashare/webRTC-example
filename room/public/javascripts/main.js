@@ -8,9 +8,9 @@ var pc;
 var remoteStream;
 var turnReady;
 
-var pc_config = {'iceServers': [{'url': 'stun:stun.l.google.com:19302'}]};
+//var pc_config = {'iceServers': [{'url': 'stun:stun.l.google.com:19302'}]};
 
-var pc_constraints = {'optional': [{'DtlsSrtpKeyAgreement': true}]};
+//var pc_constraints = {'optional': [{'DtlsSrtpKeyAgreement': true}]};
 
 // Set up audio and video regardless of what devices are present.
 var sdpConstraints = {'mandatory': {
