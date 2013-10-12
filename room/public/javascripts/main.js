@@ -20,7 +20,7 @@ var callButton = document.getElementById("callButton");
 var hangupButton = document.getElementById("hangupButton");
 
 startButton.disabled = false;
-callButton.disabled = true;
+callButton.disabled = false;
 hangupButton.disabled = true;
 
 startButton.onclick = start;
@@ -118,9 +118,7 @@ function start() {
 function handleUserMedia(stream) {
   console.log('Adding local stream.---------------------');
   localVideo.src = window.URL.createObjectURL(stream);
-  console.log(window.URL.createObjectURL(stream));
   localStream = stream;
-  console.log(stream);
   sendMessage('got user media');
   if (isInitiator) {
     maybeStart();
@@ -135,6 +133,7 @@ function maybeStart() {
   if (!isStarted && typeof localStream != 'undefined' && isChannelReady) {
     console.log("-------------------maybeStart------------------------");
     createPeerConnection();
+    //设置传送的流媒体
     pc.addStream(localStream);
     isStarted = true;
     console.log('isInitiator', isInitiator);
@@ -151,6 +150,9 @@ window.onbeforeunload = function(e){
 
 /////////////////////////////////////////////////////////
 function call() {
+  callButton.disabled = true;
+  hangupButton.disabled = false;
+  console.log("-----------------------Starting call---------------------");
 }
 
 function createPeerConnection() {
@@ -181,6 +183,14 @@ function handleIceCandidate(event) {
   }
 }
 
+function setLocalAndSendMessage(sessionDescription) {
+  // Set Opus as the preferred codec in SDP if Opus is present.
+  sessionDescription.sdp = preferOpus(sessionDescription.sdp);
+  pc.setLocalDescription(sessionDescription);
+  console.log('setLocalAndSendMessage sending message' , sessionDescription);
+  sendMessage(sessionDescription);
+}
+
 function handleCreateOfferError(event){
   console.log('createOffer() error: ', e);
 }
@@ -193,14 +203,6 @@ function doCall() {
 function doAnswer() {
   console.log('Sending answer to peer.');
   pc.createAnswer(setLocalAndSendMessage, null, sdpConstraints);
-}
-
-function setLocalAndSendMessage(sessionDescription) {
-  // Set Opus as the preferred codec in SDP if Opus is present.
-  sessionDescription.sdp = preferOpus(sessionDescription.sdp);
-  pc.setLocalDescription(sessionDescription);
-  console.log('setLocalAndSendMessage sending message' , sessionDescription);
-  sendMessage(sessionDescription);
 }
 
 function handleRemoteStreamAdded(event) {
