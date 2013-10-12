@@ -82,10 +82,10 @@ socket.on('message', function (message){
   console.log('Client received message:', message);
   console.log('----------Message type: ', message.type);
   if (message === 'got user media') {
-    maybeStart();
+    call();
   } else if (message.type === 'offer') {
     if (!isInitiator && !isStarted) {
-      maybeStart();
+      call();
     }
     pc.setRemoteDescription(new RTCSessionDescription(message));
     doAnswer();
@@ -119,19 +119,21 @@ function handleUserMedia(stream) {
   console.log('Adding local stream.---------------------');
   localVideo.src = window.URL.createObjectURL(stream);
   localStream = stream;
-  sendMessage('got user media');
-  if (isInitiator) {
-    maybeStart();
-  }
+  //sendMessage('got user media');
+  //if (isInitiator) {
+  //  call();
+  //}
 }
 
 function handleUserMediaError(error){
   console.log('navigator.getUserMedia error: ', error);
 }
 
-function maybeStart() {
+function call() {
   if (!isStarted && typeof localStream != 'undefined' && isChannelReady) {
-    console.log("-------------------maybeStart------------------------");
+    callButton.disabled = true;
+    hangupButton.disabled = false;
+    console.log("-------------------call------------------------");
     createPeerConnection();
     //设置传送的流媒体
     pc.addStream(localStream);
@@ -139,21 +141,19 @@ function maybeStart() {
     console.log('isInitiator', isInitiator);
     if (isInitiator) {
       doCall();
+    } else {
+      //在client触发server端call()
+      sendMessage('got user media');
     }
   }
 }
 
 //关闭页面时
 window.onbeforeunload = function(e){
-	sendMessage('bye');
+  sendMessage('bye');
 }
 
 /////////////////////////////////////////////////////////
-function call() {
-  callButton.disabled = true;
-  hangupButton.disabled = false;
-  console.log("-----------------------Starting call---------------------");
-}
 
 function createPeerConnection() {
   try {
