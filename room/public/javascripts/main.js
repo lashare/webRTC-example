@@ -12,6 +12,21 @@ var sdpConstraints = {'mandatory': {
   'OfferToReceiveAudio':true,
   'OfferToReceiveVideo':true }};
 
+var localVideo = document.getElementById("localVideo");
+var remoteVideo = document.getElementById("remoteVideo");
+
+var startButton = document.getElementById("startButton");
+var callButton = document.getElementById("callButton");
+var hangupButton = document.getElementById("hangupButton");
+
+startButton.disabled = false;
+callButton.disabled = true;
+hangupButton.disabled = true;
+
+startButton.onclick = start;
+callButton.onclick = call;
+hangupButton.onclick = hangup;
+
 /////////////////////////////////////////////
 
 var room = location.pathname.substring(1);
@@ -87,10 +102,18 @@ socket.on('message', function (message){
   }
 });
 
-////////////////////////////////////////////////////
+/////////////////////////start 获取本地媒体流///////////////////////////
 
-var localVideo = document.querySelector('#localVideo');
-var remoteVideo = document.querySelector('#remoteVideo');
+function start() {
+  console.log("---------------------Requesting local stream-----------------------");
+  startButton.disabled = true;
+  var constraints = {video: true};
+
+  navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+  navigator.getUserMedia(constraints, handleUserMedia, handleUserMediaError);
+
+  console.log('Getting user media with constraints', constraints);
+}
 
 function handleUserMedia(stream) {
   console.log('Adding local stream.---------------------');
@@ -107,13 +130,6 @@ function handleUserMedia(stream) {
 function handleUserMediaError(error){
   console.log('navigator.getUserMedia error: ', error);
 }
-
-//--------------------------start--------------------------------------
-var constraints = {video: true};
-navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
-navigator.getUserMedia(constraints, handleUserMedia, handleUserMediaError);
-
-console.log('Getting user media with constraints', constraints);
 
 function maybeStart() {
   if (!isStarted && typeof localStream != 'undefined' && isChannelReady) {
@@ -134,6 +150,8 @@ window.onbeforeunload = function(e){
 }
 
 /////////////////////////////////////////////////////////
+function call() {
+}
 
 function createPeerConnection() {
   try {
@@ -196,26 +214,29 @@ function handleRemoteStreamRemoved(event) {
   console.log('Remote stream removed. Event: ', event);
 }
 
-//挂断
-//function hangup() {
-//  console.log('Hanging up.');
-//  stop();
-//  sendMessage('bye');
-//}
+/////////////////////////////////挂断/////////////////////////////////////////////////
+function hangup() {
+  console.log('Hanging up.');
+  stop();
+  sendMessage('bye');
+}
 
 function handleRemoteHangup() {
 //  console.log('Session terminated.');
-  // stop();
-  // isInitiator = false;
+  stop();
+  isInitiator = false;
 }
 
-//function stop() {
-//  isStarted = false;
-//  // isAudioMuted = false;
-//  // isVideoMuted = false;
-//  pc.close();
-//  pc = null;
-//}
+function stop() {
+  isStarted = false;
+  // isAudioMuted = false;
+  // isVideoMuted = false;
+  pc.close();
+  pc = null;
+
+  hangupButton.disabled = true;
+  callButton.disabled = false;
+}
 
 ////////////////////////////////other, not necessary/////////////////////////////////
 
