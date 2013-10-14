@@ -25,6 +25,7 @@ if ('development' == app.get('env')) {
 
 app.get('/', routes.index);
 app.get('/chat', routes.chat);
+app.get('/demo', routes.demo);
 
 server = http.createServer(app);
 io = socket.listen(server);
