@@ -118,6 +118,7 @@ function start() {
 function handleUserMedia(stream) {
   console.log('Adding local stream.---------------------');
   localVideo.src = window.URL.createObjectURL(stream);
+  localVideo.play();
   localStream = stream;
   //sendMessage('got user media');
   //if (isInitiator) {
