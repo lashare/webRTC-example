@@ -120,10 +120,6 @@ function handleUserMedia(stream) {
   localVideo.src = window.URL.createObjectURL(stream);
   localVideo.play();
   localStream = stream;
-  //sendMessage('got user media');
-  //if (isInitiator) {
-  //  call();
-  //}
 }
 
 function handleUserMediaError(error){
@@ -144,9 +140,9 @@ function call() {
       //设置传送的流媒体
       pc.addStream(localStream);
       doCall();
-    //} else {
-    //  //在client触发server端call()
-    //  sendMessage('got user media');
+    } else {
+      //在client触发server端call()
+      sendMessage('got user media');
     }
   }
 }
