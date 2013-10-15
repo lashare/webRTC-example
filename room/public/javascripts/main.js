@@ -127,7 +127,8 @@ function handleUserMediaError(error){
 }
 
 function call() {
-  if (!isStarted && typeof localStream != 'undefined' && isChannelReady) {
+  //if (!isStarted && typeof localStream != 'undefined' && isChannelReady) {
+  if (!isStarted && isChannelReady) {
     callButton.disabled = true;
     hangupButton.disabled = false;
     console.log("-------------------call------------------------");
