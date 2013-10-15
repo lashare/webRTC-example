@@ -137,14 +137,16 @@ function call() {
     console.log("-------------------call------------------------");
     createPeerConnection();
     //设置传送的流媒体
-    pc.addStream(localStream);
+    //pc.addStream(localStream);
     isStarted = true;
     console.log('isInitiator', isInitiator);
     if (isInitiator) {
+      //设置传送的流媒体
+      pc.addStream(localStream);
       doCall();
-    } else {
-      //在client触发server端call()
-      sendMessage('got user media');
+    //} else {
+    //  //在client触发server端call()
+    //  sendMessage('got user media');
     }
   }
 }
