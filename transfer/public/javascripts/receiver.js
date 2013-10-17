@@ -5,8 +5,6 @@ var isInitiator = false;
 var isStarted = false;
 var localStream;
 var pc;
-var remoteStream;
-var turnReady;
 
 var sdpConstraints = {'mandatory': {
   'OfferToReceiveAudio':true,
@@ -96,7 +94,6 @@ socket.on('message', function (message){
       sdpMLineIndex: message.label,
       candidate: message.candidate
     });
-    console.log(candidate)
     pc.addIceCandidate(candidate);
   } else if (message === 'bye' && isStarted) {
     handleRemoteHangup();
@@ -121,11 +118,6 @@ function handleUserMedia(stream) {
   localVideo.src = window.URL.createObjectURL(stream);
   localVideo.play();
   localStream = stream;
-  console.log(stream.id);
-  //sendMessage('got user media');
-  //if (isInitiator) {
-  //  call();
-  //}
 }
 
 function handleUserMediaError(error){
@@ -133,16 +125,19 @@ function handleUserMediaError(error){
 }
 
 function call() {
-  if (!isStarted && typeof localStream != 'undefined' && isChannelReady) {
+  //if (!isStarted && typeof localStream != 'undefined' && isChannelReady) {
+  if (!isStarted && isChannelReady) {
     callButton.disabled = true;
     hangupButton.disabled = false;
     console.log("-------------------call------------------------");
     createPeerConnection();
     //设置传送的流媒体
-    pc.addStream(localStream);
+    //pc.addStream(localStream);
     isStarted = true;
     console.log('isInitiator', isInitiator);
     if (isInitiator) {
+      //设置传送的流媒体
+      pc.addStream(localStream);
       doCall();
     } else {
       //在client触发server端call()

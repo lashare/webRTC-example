@@ -1,12 +1,9 @@
 'use strict';
 
-var isChannelReady;
-var isInitiator = false;
+var isInitiator = true;
 var isStarted = false;
 var localStream;
 var pc;
-var remoteStream;
-var turnReady;
 
 var sdpConstraints = {'mandatory': {
   'OfferToReceiveAudio':true,
@@ -29,40 +26,42 @@ hangupButton.onclick = hangup;
 
 /////////////////////////////////////////////
 
-var room = location.pathname.substring(1);
-if (room === '') {
-//  room = prompt('Enter room name:');
-  room = 'foo';
-} else {
-  room = 'foo';
-}
+//var room = location.pathname.substring(1);
+//if (room === '') {
+////  room = prompt('Enter room name:');
+//  room = 'foo';
+//} else {
+//  room = 'foo';
+//}
 
 var socket = io.connect('http://' + window.location.hostname + ':3000');
 
-if (room !== '') {
-  console.log('Create or join room', room);
-  socket.emit('create or join', room);
-}
-
-socket.on('created', function (room){
-  console.log('Created room ' + room);
-  isInitiator = true;
-});
-
-socket.on('full', function (room){
-  console.log('Room ' + room + ' is full');
-});
-
-socket.on('join', function (room){
-  console.log('Another peer made a request to join room ' + room);
-  console.log('This peer is the initiator of room ' + room + '!');
-  isChannelReady = true;
-});
-
-socket.on('joined', function (room){
-  console.log('This peer has joined room ' + room);
-  isChannelReady = true;
-});
+//if (room !== '') {
+//  console.log('Create or join room', room);
+//  socket.emit('create or join', room);
+//}
+//
+//socket.on('created', function (room){
+//  console.log('Created room ' + room);
+//  isInitiator = true;
+//});
+//
+//socket.on('full', function (room){
+//  console.log('Room ' + room + ' is full');
+//});
+//
+//socket.on('join', function (room){
+//  console.log('Another peer made a request to join room ' + room);
+//  console.log('This peer is the initiator of room ' + room + '!');
+//  isChannelReady = true;
+//});
+//
+//socket.on('joined', function (room){
+//  console.log('This peer has joined room ' + room);
+//  isChannelReady = true;
+//});
+//-------------------server-----------------------------
+socket.emit('connecting', "sender");
 
 socket.on('log', function (array){
   console.log.apply(console, array);
@@ -70,35 +69,34 @@ socket.on('log', function (array){
 
 ////////////////////////////////////////////////
 
-function sendMessage(message){
-  console.log('Client sending message: ', message);
-  // if (typeof message === 'object') {
-  //   message = JSON.stringify(message);
+function sendMessage(info){
+  console.log('Client sending info: ', info);
+  // if (typeof info === 'object') {
+  //   info = JSON.stringify(info);
   // }
-  socket.emit('message', message);
+  socket.emit('info', info);
 }
 
-socket.on('message', function (message){
-  console.log('Client received message:', message);
-  console.log('----------Message type: ', message.type);
-  if (message === 'got user media') {
+socket.on('info', function (info){
+  console.log('Client received info:', info);
+  console.log('----------Message type: ', info.type);
+  if (info === 'got user media') {
     call();
-  } else if (message.type === 'offer') {
-    if (!isInitiator && !isStarted) {
+  } else if (info.type === 'offer') {
+    if (!isStarted) {
       call();
     }
-    pc.setRemoteDescription(new RTCSessionDescription(message));
+    pc.setRemoteDescription(new RTCSessionDescription(info));
     doAnswer();
-  } else if (message.type === 'answer' && isStarted) {
-    pc.setRemoteDescription(new RTCSessionDescription(message));
-  } else if (message.type === 'candidate' && isStarted) {
+  } else if (info.type === 'answer' && isStarted) {
+    pc.setRemoteDescription(new RTCSessionDescription(info));
+  } else if (info.type === 'candidate' && isStarted) {
     var candidate = new RTCIceCandidate({
-      sdpMLineIndex: message.label,
-      candidate: message.candidate
+      sdpMLineIndex: info.label,
+      candidate: info.candidate
     });
-    console.log(candidate)
     pc.addIceCandidate(candidate);
-  } else if (message === 'bye' && isStarted) {
+  } else if (info === 'bye' && isStarted) {
     handleRemoteHangup();
   }
 });
@@ -121,11 +119,7 @@ function handleUserMedia(stream) {
   localVideo.src = window.URL.createObjectURL(stream);
   localVideo.play();
   localStream = stream;
-  console.log(stream.id);
-  //sendMessage('got user media');
-  //if (isInitiator) {
-  //  call();
-  //}
+  console.log('localStream: ', localStream);
 }
 
 function handleUserMediaError(error){
@@ -133,20 +127,22 @@ function handleUserMediaError(error){
 }
 
 function call() {
-  if (!isStarted && typeof localStream != 'undefined' && isChannelReady) {
+  //if (!isStarted && typeof localStream != 'undefined' && isChannelReady) {
+  if (!isStarted) {
     callButton.disabled = true;
     hangupButton.disabled = false;
     console.log("-------------------call------------------------");
     createPeerConnection();
     //设置传送的流媒体
-    pc.addStream(localStream);
+    //pc.addStream(localStream);
     isStarted = true;
-    console.log('isInitiator', isInitiator);
     if (isInitiator) {
+      //设置传送的流媒体
+      pc.addStream(localStream);
       doCall();
-    } else {
-      //在client触发server端call()
-      sendMessage('got user media');
+    //} else {
+    //  //在client触发server端call()
+    //  sendMessage('got user media');
     }
   }
 }
