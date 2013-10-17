@@ -27,7 +27,7 @@ if (room === '') {
   room = 'foo';
 }
 
-var socket = io.connect('http://192.168.0.102:3000');
+var socket = io.connect('http://' + window.location.hostname + ':3000');
 
 if (room !== '') {
   console.log('Create or join room', room);
@@ -107,9 +107,9 @@ function handleUserMedia(stream) {
   localStream = stream;
   console.log(stream);
   sendMessage('got user media');
-  if (isInitiator) {
-    maybeStart();
-  }
+  //if (isInitiator) {
+  //  maybeStart();
+  //}
 }
 
 function handleUserMediaError(error){
