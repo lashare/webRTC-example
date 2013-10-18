@@ -83,6 +83,7 @@ socket.on('message', function (message){
     call();
   } else if (message.type === 'offer') {
     if (!isInitiator && !isStarted) {
+      console.log("------------------receive offer from server and call-------------------------");
       call();
     }
     pc.setRemoteDescription(new RTCSessionDescription(message));
@@ -139,9 +140,9 @@ function call() {
       //设置传送的流媒体
       pc.addStream(localStream);
       doCall();
-    } else {
-      //在client触发server端call()
-      sendMessage('got user media');
+    //} else {
+    //  //在client触发server端call()
+    //  sendMessage('got user media');
     }
   }
 }
@@ -185,7 +186,7 @@ function setLocalAndSendMessage(sessionDescription) {
   // Set Opus as the preferred codec in SDP if Opus is present.
   sessionDescription.sdp = preferOpus(sessionDescription.sdp);
   pc.setLocalDescription(sessionDescription);
-  console.log('setLocalAndSendMessage sending message' , sessionDescription);
+  console.log('setLocalAndSendMessage sending message-------------------' , sessionDescription);
   sendMessage(sessionDescription);
 }
 

@@ -180,7 +180,9 @@ function handleRemoteStreamAdded(event) {
   console.log('Remote stream added.------------------------');
   remoteVideo.src = window.URL.createObjectURL(event.stream);
   //暂时存储发送过来的stream用来转发(收的时候需要，发的时候不需要处理)
-  videoStream = event.stream;
+  videoStream = new webkitMediaStream(event.stream);
+  console.log('Stream', event.stream);
+  //videoStream = event.stream;
   console.log("-----------------------start call receiver--------------------");
   console.log('videoStream', videoStream);
   console.log(remoteVideo.src);
@@ -275,6 +277,7 @@ socket.on('message', function (message){
     pc2.setRemoteDescription(new RTCSessionDescription(message));
     doAnswer2();
   } else if (message.type === 'answer' && isStarted2) {
+    console.log('-----------------receive answer from receiver------------');
     pc2.setRemoteDescription(new RTCSessionDescription(message));
   } else if (message.type === 'candidate' && isStarted2) {
     var candidate = new RTCIceCandidate({
@@ -301,9 +304,9 @@ function call2() {
       console.log(videoStream);
       pc2.addStream(videoStream);
       doCall2();
-    } else {
-      //在client触发server端call()
-      sendMessage('got user media');
+    //} else {
+    //  //在client触发server端call()
+    //  sendMessage('got user media');
     }
   }
 }
@@ -342,6 +345,7 @@ function setLocalAndSendMessage2(sessionDescription) {
   // Set Opus as the preferred codec in SDP if Opus is present.
   sessionDescription.sdp = preferOpus(sessionDescription.sdp);
   pc2.setLocalDescription(sessionDescription);
+  console.log('------------------------send offer to receiver');
   console.log('setLocalAndSendMessage sending message' , sessionDescription);
   sendMessage(sessionDescription);
 }
@@ -351,6 +355,7 @@ function handleCreateOfferError2(event){
 }
 
 function doCall2() {
+  console.log('------------------------call receiver');
   console.log('Sending offer to peer');
   pc2.createOffer(setLocalAndSendMessage2, handleCreateOfferError2);
 }
