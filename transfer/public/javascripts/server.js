@@ -1,6 +1,5 @@
 'use strict';
 
-var isInitiator = false;
 var isStarted = false;
 var videoStream;
 var pc;
@@ -184,6 +183,7 @@ function handleRemoteStreamAdded(event) {
   videoStream = event.stream;
   console.log("-----------------------start call receiver--------------------");
   console.log('videoStream', videoStream);
+  console.log(remoteVideo.src);
   call2();
 }
 
