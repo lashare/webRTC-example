@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name='keywords' content='WebRTC, HTML5, JavaScript' />
+    <meta name='description' content='WebRTC Reference App' />
+    <meta name='viewport' content='width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1'>
+
+    <title>server</title>
+  </head>
+
+  <body>
+    <h1>server(sender)</h1>
+    <div id='container'>
+      <div id='videos'>
+        <div>
+          <button id="startButton">Start</button>
+          <button id="callButton">Call</button>
+          <button id="hangupButton">Hang Up</button>
+        </div>
+
+        <p>local</p>
+        <video id='localVideo' autoplay muted controls style="width: 320px; height: 240px; border: 1px solid black;"></video>
+        <p>remote</p>
+        <video id='remoteVideo' autoplay controls style="width: 320px; height: 240px; border: 1px solid black;"></video>
+      </div>
+    </div>
+
+    <script src='/socket.io/socket.io.js'></script>
+    <script src='/javascripts/sender.js'></script>
+  </body>
+</html>
