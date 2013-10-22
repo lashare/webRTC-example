@@ -90,7 +90,7 @@ socket.on('info', function (info){
     doAnswer();
   } else if (info.type === 'answer' && isStarted) {
     pc.setRemoteDescription(new RTCSessionDescription(info));
-  } else if (info.type === 'candidate' && isStarted) {
+  } else if (info.type === 'candidate' && info.user == 'receiver' && isStarted) {
     var candidate = new RTCIceCandidate({
       sdpMLineIndex: info.label,
       candidate: info.candidate
@@ -173,6 +173,7 @@ function handleIceCandidate(event) {
   console.log('handleIceCandidate event: ', event);
   if (event.candidate) {
     sendMessage({
+      user: 'sender',
       type: 'candidate',
       label: event.candidate.sdpMLineIndex,
       id: event.candidate.sdpMid,
