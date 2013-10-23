@@ -13,40 +13,7 @@ var remoteVideo = document.getElementById("remoteVideo");
 
 /////////////////////////////////////////////
 
-//var room = location.pathname.substring(1);
-//if (room === '') {
-////  room = prompt('Enter room name:');
-//  room = 'foo';
-//} else {
-//  room = 'foo';
-//}
-
 var socket = io.connect('http://' + window.location.hostname + ':3000');
-
-//if (room !== '') {
-//  console.log('Create or join room', room);
-//  socket.emit('create or join', room);
-//}
-//
-//socket.on('created', function (room){
-//  console.log('Created room ' + room);
-//  isInitiator = true;
-//});
-//
-//socket.on('full', function (room){
-//  console.log('Room ' + room + ' is full');
-//});
-//
-//socket.on('join', function (room){
-//  console.log('Another peer made a request to join room ' + room);
-//  console.log('This peer is the initiator of room ' + room + '!');
-//  isChannelReady = true;
-//});
-//
-//socket.on('joined', function (room){
-//  console.log('This peer has joined room ' + room);
-//  isChannelReady = true;
-//});
 
 //-------------------server and sender-----------------------------
 function sendInfo(info){
@@ -181,13 +148,7 @@ function handleRemoteStreamAdded(event) {
   console.log('Remote stream added.------------------------');
   remoteVideo.src = window.URL.createObjectURL(event.stream);
   //暂时存储发送过来的stream用来转发(收的时候需要，发的时候不需要处理)
-  videoStream = new webkitMediaStream(event.stream);
-  console.log('Stream', event.stream);
-  //videoStream = event.stream;
-  console.log("-----------------------start call receiver--------------------");
-  console.log('videoStream', videoStream);
-  console.log(remoteVideo.src);
-  call2();
+  //videoStream = new webkitMediaStream(event.stream);
 }
 
 function handleRemoteStreamRemoved(event) {
