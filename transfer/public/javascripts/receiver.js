@@ -6,9 +6,13 @@ var isStarted = false;
 var localStream;
 var pc;
 
-var sdpConstraints = {'mandatory': {
-  'OfferToReceiveAudio':true,
-  'OfferToReceiveVideo':true }};
+var sdpConstraints = {
+  optional: [],
+  mandatory: {
+    'OfferToReceiveAudio':true,
+    'OfferToReceiveVideo':false
+  }
+};
 
 var localVideo = document.getElementById("localVideo");
 var remoteVideo = document.getElementById("remoteVideo");
@@ -196,7 +200,7 @@ function handleCreateOfferError(event){
 
 function doCall() {
   console.log('Sending offer to peer');
-  pc.createOffer(setLocalAndSendMessage, handleCreateOfferError);
+  pc.createOffer(setLocalAndSendMessage, handleCreateOfferError, sdpConstraints);
 }
 
 function doAnswer() {

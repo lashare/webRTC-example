@@ -4,9 +4,13 @@ var isStarted = false;
 var videoStream;
 var pc;
 
-var sdpConstraints = {'mandatory': {
-  'OfferToReceiveAudio':true,
-  'OfferToReceiveVideo':true }};
+var sdpConstraints = {
+  optional: [],
+  mandatory: {
+    'OfferToReceiveAudio':true,
+    'OfferToReceiveVideo':false
+  }
+};
 
 var localVideo = document.getElementById("localVideo");
 var remoteVideo = document.getElementById("remoteVideo");
@@ -167,7 +171,7 @@ function handleCreateOfferError(event){
 //呼叫
 function doCall() {
   console.log('Sending offer to peer');
-  pc.createOffer(setLocalAndSendMessage, handleCreateOfferError);
+  pc.createOffer(setLocalAndSendMessage, handleCreateOfferError, sdpConstraints);
 }
 
 //应答
@@ -357,7 +361,7 @@ function handleCreateOfferError2(event){
 function doCall2() {
   console.log('------------------------call receiver');
   console.log('Sending offer to peer');
-  pc2.createOffer(setLocalAndSendMessage2, handleCreateOfferError2);
+  pc2.createOffer(setLocalAndSendMessage2, handleCreateOfferError2, sdpConstraints);
 }
 
 function doAnswer2() {
