@@ -106,7 +106,7 @@ socket.on('info', function (info){
 function start() {
   console.log("---------------------Requesting local stream-----------------------");
   startButton.disabled = true;
-  var constraints = {video: true};
+  var constraints = {video: false, audio: true};
 
   navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
   navigator.getUserMedia(constraints, handleUserMedia, handleUserMediaError);

@@ -180,13 +180,13 @@ function handleRemoteStreamAdded(event) {
   console.log('Remote stream added.------------------------');
   remoteVideo.src = window.URL.createObjectURL(event.stream);
   //暂时存储发送过来的stream用来转发(收的时候需要，发的时候不需要处理)
-  videoStream = new webkitMediaStream(event.stream);
-  console.log('Stream', event.stream);
+  //videoStream = new webkitMediaStream(event.stream);
+  //console.log('Stream', event.stream);
   //videoStream = event.stream;
   console.log("-----------------------start call receiver--------------------");
   console.log('videoStream', videoStream);
   console.log(remoteVideo.src);
-  call2();
+  call2(event.stream);
 }
 
 function handleRemoteStreamRemoved(event) {
@@ -291,7 +291,7 @@ socket.on('message', function (message){
 });
 
 //-----------------start-----------------
-function call2() {
+function call2(stream) {
   //if (!isStarted && typeof localStream != 'undefined' && isChannelReady) {
   if (!isStarted2 && isChannelReady2) {
     console.log("-------------------call------------------------");
@@ -301,8 +301,8 @@ function call2() {
     isStarted2 = true;
     if (isInitiator2) {
       //设置传送的流媒体
-      console.log(videoStream);
-      pc2.addStream(videoStream);
+      console.log(stream);
+      pc2.addStream(stream);
       doCall2();
     //} else {
     //  //在client触发server端call()
